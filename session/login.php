@@ -1,11 +1,15 @@
 <?php
 session_start();
-
+if(isset($_GET["action"]) && $_GET["action"] == "clear-visits"){
+  $_SESSION["visits"] = [];
+}
 if(isset($_SESSION["user"])){
   $user = $_SESSION["user"];
+  $_SESSION["visits"][] = date("d-m-Y");
 } else {
   if(isset($_GET["name"])){
     $_SESSION["user"] = $_GET["name"];
+    $_SESSION["visits"][] = date("d-m-Y");
     $user = $_GET["name"];
   }
 }
@@ -21,9 +25,11 @@ if(isset($_SESSION["user"])){
   <?php
   if(isset($user)){
     echo "<h1>Hola $user</h1>";
-    ?>
-      <a href="logout.php">Cerrar sesión</a>
-    <?php
+    foreach ($_SESSION["visits"] as $date) {
+      echo $date . "<br>";
+    }
+    // var_dump($_SESSION["visits"]);
+  
   } else {
     ?>
     <h2>Bienbenido, ¿Como te llamas?</h2>
@@ -36,6 +42,15 @@ if(isset($_SESSION["user"])){
     <?php
   }
   ?>
+  <p>
+    <a href="login.php">Actualizar la página</a>
+  </p>
+  <p>
+    <a href="logout.php">Cerrar Sesión</a>
+  </p>
+  <p>
+    <a href="login.php?action=clear-visits">Eliminar visitas</a>
+  </p>
 
 </body>
 </html>
